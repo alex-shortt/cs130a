@@ -8,9 +8,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    char* dataFile = argv[1];
-    char* outFile = argv[2];
+    char* inputFile = argv[1];
+    char* words = argv[2];
 
-    Dictionary *dict = new Dictionary(dataFile, 1000); 
-    dict->writeToFile(outFile);
+    printf("%s", words);
+    printf("\n");
+
+    Dictionary dict = Dictionary::readFromFile(inputFile);
+    // dict.find();
 }

@@ -1,7 +1,10 @@
-all: project2_first
+all: project2_first project2_second
 
 project2_first: hash24 dictionary test_one
 	g++ -g hash24.o dictionary.o test_one.o -o project2_first.out
+
+project2_second: hash24 dictionary test_two
+	g++ -g hash24.o dictionary.o test_two.o -o project2_second.out
 
 hash24: hash24.cpp
 	g++ -g -c hash24.cpp

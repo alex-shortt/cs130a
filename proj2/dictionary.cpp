@@ -7,6 +7,13 @@
 
 using namespace std;
 
+Dictionary::Dictionary(Hash24 *hashFunction, int size, vector<HashNode> primaryTable)
+{
+    this->hashFunction = *hashFunction;
+    this->size = size;
+    this->primaryTable = primaryTable;
+}
+
 Dictionary::Dictionary(string fname, int tsize)
 {
     hashFunction = *(new Hash24());
@@ -177,7 +184,7 @@ Dictionary::Dictionary(string fname, int tsize)
             }
         }
     }
-    average_hash_attempts = (float) hash_attempts_sum / (float) hash_attempts_count;
+    average_hash_attempts = (float)hash_attempts_sum / (float)hash_attempts_count;
 
     // print results
     hashFunction.dump();
@@ -219,8 +226,23 @@ bool Dictionary::find(string word)
 
 void Dictionary::writeToFile(std::string fName)
 {
-}
+    ofstream file;
+    file.open(fName, ios::out);
 
-Dictionary Dictionary::readFromFile(std::string fName)
-{
+    file.write((char *)&hashFunction, sizeof(hashFunction));
+    file.write((char *)&size, sizeof(size));
+    for (int i = 0; i < primaryTable.size(); i++)
+    {
+        HashNode *node = &(primaryTable[i]);
+        // file.write((char *)node, sizeof(node));
+        // file.write(node->value.c_str(), sizeof(node->value));
+        file.write((char *)&(node->function), sizeof((node->function)));
+        file.write((char *)&(node->size), sizeof(node->size));
+        file.write((char *)&(node->hashFunctionsTried), sizeof(node->hashFunctionsTried));
+        // for(int y = 0; y < node->values.size(); y++){
+        //     file.write(node->values[y].c_str(), sizeof(node->values[y]));
+        // }
+    }
+
+    file.close();
 }
