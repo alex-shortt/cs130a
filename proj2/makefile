@@ -15,5 +15,8 @@ dictionary: dictionary.cpp
 test_one: test_one.cpp
 	g++ -g -c test_one.cpp
 
+test_two: test_two.cpp
+	g++ -g -c test_two.cpp
+
 clean:
 	rm *.o

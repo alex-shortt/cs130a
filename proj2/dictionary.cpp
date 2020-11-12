@@ -131,6 +131,7 @@ Dictionary::Dictionary(string fname, int tsize)
                 // find new hash function
                 do
                 {
+                    int local_hash_worked = 1;
                     node->function = Hash24();
                     node->hashFunctionsTried++;
                     int newCollisions[node->size];
@@ -140,9 +141,16 @@ Dictionary::Dictionary(string fname, int tsize)
                         newCollisions[newNewIndex]++;
                         if (newCollisions[newNewIndex] > 1)
                         {
-                            continue;
+                            local_hash_worked = 0;
+                            break;
                         }
                     }
+
+                    if (!local_hash_worked)
+                    {
+                        continue;
+                    }
+
                     newHashFunctionFound = 1;
                 } while (!newHashFunctionFound);
 
@@ -234,14 +242,24 @@ void Dictionary::writeToFile(std::string fName)
     for (int i = 0; i < primaryTable.size(); i++)
     {
         HashNode *node = &(primaryTable[i]);
-        // file.write((char *)node, sizeof(node));
-        // file.write(node->value.c_str(), sizeof(node->value));
+        int node_values_size = node->values.size();
+
+        string value = node->value;
+        size_t value_len = value.size();
+        file.write((char *)&(value_len), sizeof(value_len));
+        file.write(node->value.c_str(), value_len);
+
         file.write((char *)&(node->function), sizeof((node->function)));
         file.write((char *)&(node->size), sizeof(node->size));
         file.write((char *)&(node->hashFunctionsTried), sizeof(node->hashFunctionsTried));
-        // for(int y = 0; y < node->values.size(); y++){
-        //     file.write(node->values[y].c_str(), sizeof(node->values[y]));
-        // }
+        file.write((char *)&node_values_size, sizeof(node_values_size));
+        for (int y = 0; y < node_values_size; y++)
+        {
+            string value = node->values[y];
+            size_t size = value == "" ? 0 : value.size();
+            file.write((char *)&(size), sizeof(size));
+            file.write(node->values[y].c_str(), size);
+        }
     }
 
     file.close();
