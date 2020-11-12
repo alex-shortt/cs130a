@@ -17,12 +17,16 @@ int main(int argc, char *argv[])
 
     Dictionary dict = Dictionary::readFromFile(inputFile);
 
-    size_t pos = 0;
-    string word;
     string wordString(wordChars);
-    while ((pos = wordString.find(", ")) != string::npos) {
+    size_t pos = wordString.find(", ");
+    string word;
+    do
+    {
         word = wordString.substr(0, pos);
         printf("%s %s\n", word.c_str(), dict.find(word.c_str()) ? "found" : "not found");
         wordString.erase(0, pos + 2);
-    }
+    } while ((pos = wordString.find(", ")) != string::npos);
+
+    //print last one
+    printf("%s %s\n", wordString.c_str(), dict.find(wordString.c_str()) ? "found" : "not found");
 }
