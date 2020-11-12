@@ -1,5 +1,8 @@
+#include <string>
 #include "hash24.h"
 #include "dictionary.h"
+
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -10,14 +13,16 @@ int main(int argc, char *argv[])
     }
 
     char *inputFile = argv[1];
-    char *wordString = argv[2];
+    char *wordChars = argv[2];
 
     Dictionary dict = Dictionary::readFromFile(inputFile);
 
-    char *token = strtok(wordString, ", ");
-    while (token != NULL)
-    {
-        printf("%s %s\n", token, dict.find(token) ? "found" : "not found");
-        token = strtok(NULL, ", ");
+    size_t pos = 0;
+    string word;
+    string wordString(wordChars);
+    while ((pos = wordString.find(", ")) != string::npos) {
+        word = wordString.substr(0, pos);
+        printf("%s %s\n", word.c_str(), dict.find(word.c_str()) ? "found" : "not found");
+        wordString.erase(0, pos + 2);
     }
 }
